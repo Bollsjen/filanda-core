@@ -4,11 +4,14 @@ namespace App\core;
 
 use App\Program;
 use App\core\controller\BaseController;
+use App\core\services\AuthenticationService;
 use App\core\Attributes\HttpGet;
 use App\core\Attributes\HttpPost;
 use App\core\Attributes\HttpPut;
 use App\core\Attributes\HttpDelete;
 use App\core\Attributes\HttpPatch;
+
+use App\core\responses\Unauthorized;
 
 class Routes {
     private static array $httpMethodMap = [
@@ -94,19 +97,29 @@ class Routes {
     static function matchPathAndFunction($path, $requestMethod, $matchedController){
         $reflectionClass = new \ReflectionClass($matchedController['class']);
 
-        $methods = $reflectionClass->getMethods();
-
+        $methods = $reflectionClass->getMethods();       
         $methodPaths = [];
 
         foreach($methods as $method){
+            $attributes = $method->getAttributes();
+
             
             $methodWithHTTPAttribute = $method->getAttributes(self::$httpMethodMap[strtoupper($requestMethod)]);
+
+            $authRequired = false;
+
+            foreach($attributes as $attribute){
+                    if($attribute->getName() === 'App\core\attributes\Authorize'){
+                        $authRequired = true;
+                    }
+                }
 
             if(!empty($methodWithHTTPAttribute)){
                 $attributeInstance = $methodWithHTTPAttribute[0]->newInstance();
                 $methodPaths[] = [
                     'method' => $method,
-                    'path' => $attributeInstance->path
+                    'path' => $attributeInstance->path,
+                    'auth' => $authRequired
                 ];
             }
         }
@@ -122,6 +135,14 @@ class Routes {
             $params = self::matchRoute($fullPattern, $path);
 
             if($params !== false){
+                if($methodPath['auth'] === true){
+                    if(!AuthenticationService::isAuthenticated()){
+                        return [
+                            'control' => new Unauthorized()
+                        ];
+                    }
+                }
+
                 return [
                     'method' => $methodPath['method'],
                     'params' => $params

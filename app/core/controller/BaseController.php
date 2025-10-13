@@ -2,8 +2,21 @@
 
 namespace App\core\controller;
 
+use App\core\responses\NotFound;
+use App\core\responses\Unauthorized;
+
 class BaseController {
     public static function request($methodMatch){
+        if($methodMatch === null){
+            self::response(new NotFound());
+            return;
+        }
+
+        if(isset($methodMatch['control'])){
+            self::response($methodMatch['control']);
+            return;
+        }
+
         $reflectionClass = $methodMatch['method']->getDeclaringClass();
         $classInstance = $reflectionClass->newInstance();
         
