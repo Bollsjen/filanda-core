@@ -11,12 +11,16 @@ use App\core\attributes\FromBody;
 use App\core\attributes\FromForm;
 use App\core\attributes\FromQuery;
 
+use App\core\responses\Ok;
+use App\core\responses\NotFound;
+
 #[ApiController('/api/user')]
 class UserController extends BaseController {
 
     #[HttpGet('')]
     public function get(){
-        return ['users' => []];
+        //return new NotFound();
+        return new Ok('Cool');
     }
 
     #[HttpGet('/{id}')]

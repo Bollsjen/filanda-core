@@ -1,0 +1,18 @@
+<?php
+
+namespace App\core\responses;
+
+use App\core\responses\ActionResult;
+
+class NotFound extends ActionResult {
+    public function __construct(mixed $data = null) {
+        parent::__construct($data);
+        $this->statusCode = 404;
+    }
+    
+    public function send(): void {
+        http_response_code($this->statusCode);
+        header('Content-Type: application/json');
+        echo json_encode($this->data ?? ['error' => 'Not Found']);
+    }
+}

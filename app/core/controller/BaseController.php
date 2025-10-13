@@ -3,14 +3,6 @@
 namespace App\core\controller;
 
 class BaseController {
-        private static array $fromDataMap = [
-            \App\core\attributes\FromBody::class,
-            \App\core\attributes\FromForm::class,
-            \App\core\attributes\FromRoute::class,
-            \App\core\aAttributes\FromQuery::class,
-        ];
-
-
     public static function request($methodMatch){
         $reflectionClass = $methodMatch['method']->getDeclaringClass();
         $classInstance = $reflectionClass->newInstance();
@@ -66,7 +58,10 @@ class BaseController {
     }
 
     public static function response($result){
-        if(is_array($result) || is_object($result)){
+        if($result instanceof \App\core\responses\ActionResult){
+            $result->send();
+        }
+        else if(is_array($result) || is_object($result)){
             header('Content-Type: application/json');
             $json = json_encode($result);
             echo $json;

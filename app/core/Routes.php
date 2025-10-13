@@ -20,6 +20,8 @@ class Routes {
     ];
 
     static function init($path, $method){
+        Program::Main();
+
         $pathArray = explode('/',$path);
         $pathArray = array_splice($pathArray, 2, count($pathArray));
 
