@@ -66,7 +66,7 @@ class BaseController {
             $arguments[] = $value;
         }
         
-        $result = $methodMatch['method']->invoke($classInstance, $arguments);
+        $result = $methodMatch['method']->invoke($classInstance, ...$arguments);
         self::response($result);
     }
 

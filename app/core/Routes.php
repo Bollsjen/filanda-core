@@ -5,11 +5,20 @@ namespace App\core;
 use App\Program;
 use App\core\controller\BaseController;
 use App\core\services\AuthenticationService;
+use App\core\Attributes\ApiController;
 use App\core\Attributes\HttpGet;
 use App\core\Attributes\HttpPost;
 use App\core\Attributes\HttpPut;
 use App\core\Attributes\HttpDelete;
 use App\core\Attributes\HttpPatch;
+
+use App\core\responses\Ok;
+use App\core\responses\NotFound;
+use App\core\responses\NoContent;
+
+use App\core\attributes\FromBody;
+use App\core\attributes\FromForm;
+use App\core\attributes\FromQuery;
 
 use App\core\responses\Unauthorized;
 
@@ -41,20 +50,33 @@ class Routes {
     static function getControllerClasses() : array{
         $controllers = [];
 
-        $files = glob(__DIR__ . '/../controller/*.php');
+        $root = dirname(__DIR__);
 
-        foreach($files as $file){
-            $classesBefore = get_declared_classes();
+            // Recursive iterator for all .php files under $root
+        $it = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator(
+                $root,
+                \RecursiveDirectoryIterator::SKIP_DOTS
+            )
+        );
 
-            require_once $file;
+        foreach ($it as $file) {
+            /** @var SplFileInfo $file */
+            if ($file->isFile() && $file->getExtension() === 'php') {
+                // Remember what classes exist before loading this file
+                $before = get_declared_classes();
 
-            $classesAfter = get_declared_classes();
+                // Load the file once
+                require_once $file->getPathname();
 
-            $newClasses = array_diff($classesAfter, $classesBefore);
+                // New classes that appeared
+                $after = get_declared_classes();
+                $new   = array_diff($after, $before);
 
-            foreach($newClasses as $class){
-                if(is_subclass_of($class, BaseController::class)){
-                    $controllers[] = $class;
+                foreach ($new as $class) {
+                    if (is_subclass_of($class, BaseController::class)) {
+                        $controllers[] = $class;
+                    }
                 }
             }
         }
@@ -64,20 +86,21 @@ class Routes {
 
     static function matchPathAndController($path){
         $controllerClasses = self::getControllerClasses();
-
+         
         $controllerPaths = [];
 
         foreach($controllerClasses as $class){
+            
             $reflectionClass = new \ReflectionClass($class);
 
             $classAttributes = $reflectionClass->getAttributes(\App\core\attributes\ApiController::class);
-
             if (!empty($classAttributes)) {
                 $attributeInstance = $classAttributes[0]->newInstance();
                 $controllerPaths[] = [
                     'class' => $class,
                     'path' => $attributeInstance->path
                 ];
+               
             }
         }
 
