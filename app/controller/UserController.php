@@ -2,21 +2,21 @@
 
 namespace App\controller;
 
-use App\core\controller\BaseController;
-use App\core\attributes\ApiController;
-use App\core\attributes\HttpGet;
-use App\core\attributes\HttpPost;
-use App\core\attributes\HttpDelete;
+use Core\controller\BaseController;
+use Core\attributes\ApiController;
+use Core\attributes\HttpGet;
+use Core\attributes\HttpPost;
+use Core\attributes\HttpDelete;
 
-use App\core\attributes\FromBody;
-use App\core\attributes\FromForm;
-use App\core\attributes\FromQuery;
+use Core\attributes\FromBody;
+use Core\attributes\FromForm;
+use Core\attributes\FromQuery;
 
-use App\core\attributes\Authorize;
+use Core\attributes\Authorize;
 
-use App\core\responses\Ok;
-use App\core\responses\NotFound;
-use App\core\responses\NoContent;
+use Core\responses\Ok;
+use Core\responses\NotFound;
+use Core\responses\NoContent;
 
 use App\managers\UserManager;
 

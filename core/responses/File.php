@@ -1,9 +1,9 @@
 <?php
 // App/core/responses/File.php
 
-namespace App\core\responses;
+namespace Core\responses;
 
-use App\core\responses\ActionResult;
+use Core\responses\ActionResult;
 
 class File extends ActionResult {
     private $contentType;

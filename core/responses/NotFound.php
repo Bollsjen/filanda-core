@@ -1,8 +1,8 @@
 <?php
 
-namespace App\core\responses;
+namespace Core\responses;
 
-use App\core\responses\ActionResult;
+use Core\responses\ActionResult;
 
 class NotFound extends ActionResult {
     public function __construct(mixed $data = null) {

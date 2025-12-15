@@ -1,41 +1,38 @@
 <?php
 
-namespace App\core;
+namespace Core;
 
 use App\Program;
-use App\core\controller\BaseController;
-use App\core\services\AuthenticationService;
-use App\core\Attributes\ApiController;
-use App\core\Attributes\HttpGet;
-use App\core\Attributes\HttpPost;
-use App\core\Attributes\HttpPut;
-use App\core\Attributes\HttpDelete;
-use App\core\Attributes\HttpPatch;
+use Core\controller\BaseController;
+use Core\services\AuthenticationService;
+use Core\Attributes\ApiController;
+use Core\Attributes\HttpGet;
+use Core\Attributes\HttpPost;
+use Core\Attributes\HttpPut;
+use Core\Attributes\HttpDelete;
+use Core\Attributes\HttpPatch;
 
-use App\core\responses\Ok;
-use App\core\responses\NotFound;
-use App\core\responses\NoContent;
+use Core\responses\Ok;
+use Core\responses\NotFound;
+use Core\responses\NoContent;
 
-use App\core\attributes\FromBody;
-use App\core\attributes\FromForm;
-use App\core\attributes\FromQuery;
+use Core\attributes\FromBody;
+use Core\attributes\FromForm;
+use Core\attributes\FromQuery;
 
-use App\core\responses\Unauthorized;
+use Core\responses\Unauthorized;
 
 class Routes {
     private static array $httpMethodMap = [
-        'GET' => \App\core\Attributes\HttpGet::class,
-        'POST' => \App\core\Attributes\HttpPost::class,
-        'PUT' => \App\core\Attributes\HttpPut::class,
-        'DELETE' => \App\core\Attributes\HttpDelete::class,
-        'PATCH' => \App\core\Attributes\HttpPatch::class,
+        'GET' => \Core\Attributes\HttpGet::class,
+        'POST' => \Core\Attributes\HttpPost::class,
+        'PUT' => \Core\Attributes\HttpPut::class,
+        'DELETE' => \Core\Attributes\HttpDelete::class,
+        'PATCH' => \Core\Attributes\HttpPatch::class,
     ];
 
     static function init($path, $method){
-        Program::Main();
-
-        $pathArray = explode('/',$path);
-        $pathArray = array_splice($pathArray, 2, count($pathArray));
+        //Program::Main();
 
         $matchedController = self::matchPathAndController($path);        
 
@@ -43,6 +40,7 @@ class Routes {
             $methodMatch = self::matchPathAndFunction($path, $method, $matchedController);
             BaseController::request($methodMatch);
         }else{
+            http_response_code(404);
             echo 'No result';
         }
     }
@@ -93,7 +91,7 @@ class Routes {
             
             $reflectionClass = new \ReflectionClass($class);
 
-            $classAttributes = $reflectionClass->getAttributes(\App\core\attributes\ApiController::class);
+            $classAttributes = $reflectionClass->getAttributes(\Core\attributes\ApiController::class);
             if (!empty($classAttributes)) {
                 $attributeInstance = $classAttributes[0]->newInstance();
                 $controllerPaths[] = [
@@ -132,7 +130,7 @@ class Routes {
             $authRequired = false;
 
             foreach($attributes as $attribute){
-                    if($attribute->getName() === 'App\core\attributes\Authorize'){
+                    if($attribute->getName() === 'Core\attributes\Authorize'){
                         $authRequired = true;
                     }
                 }

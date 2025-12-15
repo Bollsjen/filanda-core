@@ -2,7 +2,9 @@
 
 // Autoloading (you'd use Composer's autoloader in real project)
 require_once __DIR__ . '/autoload.php';
-require_once __DIR__ . '/app/core/Routes.php';
+require_once __DIR__ . '/core/Routes.php';
+
+\App\Program::Main();
 
 // Get the request path and method
 $requestUri = $_SERVER['REQUEST_URI'];
@@ -19,9 +21,9 @@ if (str_starts_with($requestPath, '/api')) {
 }
 
 function handleApiRequest($path, $method) {
-    header('Content-Type: application/json');
+    //header('Content-Type: application/json');
     // Your API routing/controller logic here
-    \App\core\Routes::init($path, $method);
+    \Core\Routes::init($path, $method);
 }
 
 function handleWebRequest($path, $method) {

@@ -2,8 +2,8 @@
 
 namespace App\managers;
 
-use App\core\services\AuthenticationService;
-use App\core\models\AuthUser;
+use Core\services\AuthenticationService;
+use Core\models\AuthUser;
 
 class UserManager {
     public function login(){

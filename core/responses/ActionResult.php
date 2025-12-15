@@ -1,6 +1,6 @@
 <?php
 
-namespace App\core\responses;
+namespace Core\responses;
 
 abstract class ActionResult {
     protected mixed $data;

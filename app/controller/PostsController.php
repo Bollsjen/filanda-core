@@ -2,16 +2,30 @@
 
 namespace App\controller;
 
-use App\core\controller\BaseController;
-use App\core\attributes\ApiController;
+use Core\controller\BaseController;
+use Core\attributes\ApiController;
+use Core\attributes\HttpGet;
+
+use Core\responses\Ok;
 
 #[ApiController('/api/posts')]
 class PostsController extends BaseController {
+#[HttpGet('')]
+public function get(){
+    return new Ok([
+        'posts' => [
+            [
+                'userID' => 1,
+                'content' => 'Hello World!'
+            ],
+            [
+                'userID' => 2,
+                'content' => 'Second Post'
+            ]
+        ]
+    ]);
+}
 
-    #[HttpGet('')]
-    public function get(){
-        return ['posts' => []];
-    }
 
     #[HttpGet('/{id}')]
     public function getByID($id){

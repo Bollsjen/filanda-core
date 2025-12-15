@@ -2,8 +2,8 @@
 
 namespace App;
 
-use App\core\cors\Cors;
-use App\core\cors\CorsOptions;
+use Core\cors\Cors;
+use Core\cors\CorsOptions;
 
 class Program {
     private static ?Cors $cors = null;

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\core\services;
+namespace Core\services;
 
-use App\core\models\AuthUser;
+use Core\models\AuthUser;
 
 class AuthenticationService {
     private const SESSION_USER_KEY = 'auth_user_id';

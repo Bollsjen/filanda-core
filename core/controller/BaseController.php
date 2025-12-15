@@ -1,9 +1,9 @@
 <?php
 
-namespace App\core\controller;
+namespace Core\controller;
 
-use App\core\responses\NotFound;
-use App\core\responses\Unauthorized;
+use Core\responses\NotFound;
+use Core\responses\Unauthorized;
 
 class BaseController {
     public static function request($methodMatch){
@@ -39,21 +39,21 @@ class BaseController {
                 $attribute = $attributes[0];
 
                 switch($attribute->getName()){
-                    case \App\core\attributes\FromBody::class:
+                    case \Core\attributes\FromBody::class:
                         $rawBody = file_get_contents('php://input');
                         $body = json_decode($rawBody, true);
                         $value = $body;
                         break;
                     
-                    case \App\core\attributes\FromForm::class:
+                    case \Core\attributes\FromForm::class:
                         $value = $_POST ?? null;
                         break;
 
-                    case \App\core\attributes\FromRoute::class:
+                    case \Core\attributes\FromRoute::class:
                         $value = $methodMatch['params'][$paramName] ?? null;
                         break;
 
-                    case \App\core\attributes\FromQuery::class:
+                    case \Core\attributes\FromQuery::class:
                         $value = $_GET[$paramName] ?? null;
                         break;
 
@@ -71,7 +71,7 @@ class BaseController {
     }
 
     public static function response($result){
-        if($result instanceof \App\core\responses\ActionResult){
+        if($result instanceof \Core\responses\ActionResult){
             $result->send();
         }
         else if(is_array($result) || is_object($result)){

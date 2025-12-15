@@ -1,13 +1,13 @@
 <?php
 
-namespace App\core\responses;
+namespace Core\responses;
 
-use App\core\responses\ActionResult;
+use Core\responses\ActionResult;
 
-class NoContent extends ActionResult {
+class Unauthorized extends ActionResult {
     public function __construct() {
         parent::__construct(null);
-        $this->statusCode = 204;
+        $this->statusCode = 401;
     }
     
     public function send(): void {

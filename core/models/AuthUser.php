@@ -1,6 +1,6 @@
 <?php
 
-namespace App\core\models;
+namespace Core\models;
 
 class AuthUser {
     public int $id;
